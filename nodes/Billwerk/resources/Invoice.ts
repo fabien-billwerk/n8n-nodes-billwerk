@@ -1,16 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const invoiceOperations: INodeProperties[] = [
 	{
@@ -38,13 +28,10 @@ export const invoiceOperations: INodeProperties[] = [
 				description: 'Creates a file download token for the given invoice',
 				action: 'Get download link an invoice',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
+				resource: ['invoice'],
 			},
 		},
 	},
@@ -55,12 +42,8 @@ export const invoiceOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -69,15 +52,12 @@ export const invoiceOperations: INodeProperties[] = [
 		name: 'search',
 		type: 'string',
 		default: '',
-		description: 'Search invoice by Document Number or by the customer’s last name, first name or company name',
+		description:
+			'Search invoice by Document Number or by the customer’s last name, first name or company name',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -87,15 +67,12 @@ export const invoiceOperations: INodeProperties[] = [
 		name: 'dateFrom',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches documents with creation date equal or younger specified timestamp, optional',
+		description:
+			'Searches documents with creation date equal or younger specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -104,15 +81,12 @@ export const invoiceOperations: INodeProperties[] = [
 		name: 'dateTo',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches documents with creation date equal or older than specified timestamp, optional',
+		description:
+			'Searches documents with creation date equal or older than specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -124,12 +98,8 @@ export const invoiceOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first invoices to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -141,12 +111,8 @@ export const invoiceOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['invoice'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -157,19 +123,19 @@ export const invoiceOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'invoice',
-				],
-				operation: [
-					'get', 'downloadLink',
-				],
+				resource: ['invoice'],
+				operation: ['get', 'downloadLink'],
 			},
 		},
 	},
 ];
 
-
-export async function executeInvoiceApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeInvoiceApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'get') {
 		// *********************************************************
@@ -178,7 +144,6 @@ export async function executeInvoiceApi(this: IExecuteFunctions, itemIndex: numb
 		const id = this.getNodeParameter('id', itemIndex);
 		const endpoint = `/api/v1/invoices/${id}`;
 		return await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
-
 	} else if (operation === 'getAll') {
 		// *********************************************************
 		//       invoice : getAll
@@ -192,7 +157,6 @@ export async function executeInvoiceApi(this: IExecuteFunctions, itemIndex: numb
 		qs.take = this.getNodeParameter('take', itemIndex);
 		const endpoint = '/api/v1/invoices';
 		return await billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
 	} else if (operation === 'downloadLink') {
 		// *********************************************************
 		//       invoice : downloadLink
@@ -201,5 +165,4 @@ export async function executeInvoiceApi(this: IExecuteFunctions, itemIndex: numb
 		const endpoint = `/api/v1/invoices/${id}/downloadLink`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
 	}
-
 }

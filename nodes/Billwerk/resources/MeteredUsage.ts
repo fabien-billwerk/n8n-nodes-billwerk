@@ -1,16 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const meteredUsageOperations: INodeProperties[] = [
 	{
@@ -38,13 +28,10 @@ export const meteredUsageOperations: INodeProperties[] = [
 				description: 'Remove an unbilled metered usage',
 				action: 'Delete a metered usage',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
+				resource: ['meteredUsage'],
 			},
 		},
 	},
@@ -56,12 +43,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'create', 'getAll', 'delete',
-				],
+				resource: ['meteredUsage'],
+				operation: ['create', 'getAll', 'delete'],
 			},
 		},
 	},
@@ -72,16 +55,11 @@ export const meteredUsageOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'delete',
-				],
+				resource: ['meteredUsage'],
+				operation: ['delete'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'From',
@@ -91,12 +69,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first usage to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['meteredUsage'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -108,12 +82,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['meteredUsage'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -122,15 +92,12 @@ export const meteredUsageOperations: INodeProperties[] = [
 		name: 'fromDateTime',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches metered usages with creation date equal or younger specified timestamp, optional',
+		description:
+			'Searches metered usages with creation date equal or younger specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['meteredUsage'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -139,15 +106,12 @@ export const meteredUsageOperations: INodeProperties[] = [
 		name: 'untilDateTime',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches metered usages with creation date equal or older than specified timestamp, optional',
+		description:
+			'Searches metered usages with creation date equal or older than specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['meteredUsage'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -160,12 +124,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Billwerk ID of the metered usage component',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['meteredUsage'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -177,12 +137,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Quantity to book',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['meteredUsage'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -194,12 +150,8 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Optional short description associated with the usage',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['meteredUsage'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -211,20 +163,19 @@ export const meteredUsageOperations: INodeProperties[] = [
 		description: 'Date when the metered usage is due',
 		displayOptions: {
 			show: {
-				resource: [
-					'meteredUsage',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['meteredUsage'],
+				operation: ['create'],
 			},
 		},
 	},
 ];
 
-
-
-export async function executeMeteredUsageApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeMeteredUsageApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'getAll') {
 		// *********************************************************
@@ -238,7 +189,6 @@ export async function executeMeteredUsageApi(this: IExecuteFunctions, itemIndex:
 		const contractId = this.getNodeParameter('contractId', itemIndex);
 		const endpoint = `/api/v1/contracts/${contractId}/usage`;
 		return billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
 	} else if (operation === 'create') {
 		// *********************************************************
 		//       meteredUsage : create
@@ -252,7 +202,6 @@ export async function executeMeteredUsageApi(this: IExecuteFunctions, itemIndex:
 		const endpoint = `/api/v1/contracts/${contractId}/usage`;
 		await billwerkApiRequest.call(this, 'POST', endpoint, {}, body);
 		return { success: true };
-
 	} else if (operation === 'delete') {
 		// *********************************************************
 		//       meteredUsage : delete

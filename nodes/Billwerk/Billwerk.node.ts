@@ -1,78 +1,39 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeExecutionData, INodeType, INodeTypeDescription } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeExecutionData,
-	INodeType,
-	INodeTypeDescription,
-} from 'n8n-workflow';
+import { customerDataFields, customerOperations, executeCustomerApi } from './resources/Customer';
 
-import {
-	customerDataFields,
-	customerOperations,
-	executeCustomerApi,
-} from './resources/Customer';
+import { contractOperations, executeContractApi } from './resources/Contract';
 
-import {
-	contractOperations,
-	executeContractApi,
-} from './resources/Contract';
+import { executeInvoiceApi, invoiceOperations } from './resources/Invoice';
 
-import {
-	executeInvoiceApi,
-	invoiceOperations,
-} from './resources/Invoice';
+import { executeMeteredUsageApi, meteredUsageOperations } from './resources/MeteredUsage';
 
-import {
-	executeMeteredUsageApi,
-	meteredUsageOperations,
-} from './resources/MeteredUsage';
+import { executeOrderApi, orderDataFields, orderOperations } from './resources/Order';
 
-import {
-	executeOrderApi,
-	orderDataFields,
-	orderOperations,
-} from './resources/Order';
+import { executePaymentApi, paymentOperations } from './resources/Payment';
 
-import {
-	executePaymentApi,
-	paymentOperations,
-} from './resources/Payment';
+import { executeProductApi, productOperations } from './resources/Product';
 
-import {
-	executeProductApi,
-	productOperations,
-} from './resources/Product';
-
-import {
-	executeReportApi,
-	reportOperations,
-} from './resources/Report';
+import { executeReportApi, reportOperations } from './resources/Report';
 
 import {
 	accountingExportOperations,
 	executeAccountingExportApi,
 } from './resources/AccountingExport';
 
-import {
-	executeTokenApi,
-	tokenOperations,
-} from './resources/Token';
+import { executeTokenApi, tokenOperations } from './resources/Token';
 
 export class Billwerk implements INodeType {
-
 	description: INodeTypeDescription = {
-		displayName: 'Billwerk',
+		displayName: 'Billwerk+ Transform',
 		name: 'billwerk',
-		icon: 'file:billwerk.svg',
+		icon: 'file:Billwerk+Transform.svg',
 		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Automate your subscription business with billwerk',
+		description: 'Automate your subscription business with Billwerk+ Transform',
 		defaults: {
-			name: 'Billwerk',
+			name: 'Billwerk+ Transform',
 		},
 
 		inputs: ['main'],
@@ -155,12 +116,8 @@ export class Billwerk implements INodeType {
 			...reportOperations,
 
 			...tokenOperations,
-
 		],
 	};
-
-
-
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
@@ -171,9 +128,8 @@ export class Billwerk implements INodeType {
 		let responseData;
 		const returnData: IDataObject[] = [];
 
-
 		for (let i = 0; i < items.length; i++) {
-			try{
+			try {
 				if (resource === 'accountingExport') {
 					responseData = await executeAccountingExportApi.call(this, i, operation);
 				} else if (resource === 'customer') {
@@ -196,9 +152,8 @@ export class Billwerk implements INodeType {
 					responseData = await executeTokenApi.call(this, i, operation);
 				}
 				Array.isArray(responseData)
-				? returnData.push(...responseData)
-				: returnData.push(responseData);
-
+					? returnData.push(...responseData)
+					: returnData.push(responseData);
 			} catch (error) {
 				if (this.continueOnFail()) {
 					returnData.push({ error: error.message });
@@ -206,7 +161,6 @@ export class Billwerk implements INodeType {
 				}
 				throw error;
 			}
-
 		}
 		return [this.helpers.returnJsonArray(returnData)];
 	}

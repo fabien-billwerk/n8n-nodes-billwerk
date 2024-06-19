@@ -1,20 +1,8 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
+import { billwerkApiRequest } from '../GenericFunctions';
 
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
-import {
-	customerDataOptions,
-} from './Customer';
-
+import { customerDataOptions } from './Customer';
 
 export const orderOperations: INodeProperties[] = [
 	{
@@ -63,9 +51,7 @@ export const orderOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
+				resource: ['order'],
 			},
 		},
 	},
@@ -75,15 +61,12 @@ export const orderOperations: INodeProperties[] = [
 		name: 'search',
 		type: 'string',
 		default: '',
-		description: 'Search orders by First Name, Last Name, Company Name, Email Address, Customer ID, and Debtor Account',
+		description:
+			'Search orders by First Name, Last Name, Company Name, Email Address, Customer ID, and Debtor Account',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -142,12 +125,8 @@ export const orderOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -173,12 +152,8 @@ export const orderOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -187,15 +162,12 @@ export const orderOperations: INodeProperties[] = [
 		name: 'dateFrom',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches documents with creation date equal or younger specified timestamp, optional',
+		description:
+			'Searches documents with creation date equal or younger specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -204,15 +176,12 @@ export const orderOperations: INodeProperties[] = [
 		name: 'dateTo',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches documents with creation date equal or older than specified timestamp, optional',
+		description:
+			'Searches documents with creation date equal or older than specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -224,12 +193,8 @@ export const orderOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first orders to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -241,16 +206,11 @@ export const orderOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['order'],
+				operation: ['getAll'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'Order ID',
@@ -259,17 +219,12 @@ export const orderOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'get', 'delete', 'approve', 'commit', 'decline',
-				],
+				resource: ['order'],
+				operation: ['get', 'delete', 'approve', 'commit', 'decline'],
 			},
 		},
 	},
 ];
-
 
 export const orderDataFields: INodeProperties[] = [
 	{
@@ -367,18 +322,19 @@ export const orderDataFields: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'order',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['order'],
+				operation: ['create'],
 			},
 		},
 	},
 ];
 
-export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeOrderApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'get') {
 		// *********************************************************
@@ -387,7 +343,6 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		const id = this.getNodeParameter('id', itemIndex);
 		const endpoint = `/api/v1/orders/${id}`;
 		return await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
-
 	} else if (operation === 'getAll') {
 		// *********************************************************
 		//       order : getAll
@@ -402,7 +357,6 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		qs.take = this.getNodeParameter('take', itemIndex);
 		const endpoint = '/api/v1/orders';
 		return await billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
 	} else if (operation === 'delete') {
 		// *********************************************************
 		//       order : delete
@@ -411,7 +365,6 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		const endpoint = `/api/v1/orders/${id}`;
 		await billwerkApiRequest.call(this, 'DELETE', endpoint, {}, {});
 		return { success: true };
-
 	} else if (operation === 'commit') {
 		// *********************************************************
 		//       order : commit
@@ -419,7 +372,6 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		const id = this.getNodeParameter('Id', itemIndex);
 		const endpoint = `/api/v1/orders/${id}/commit`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
-
 	} else if (operation === 'approve') {
 		// *********************************************************
 		//       order : approve
@@ -427,7 +379,6 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		const id = this.getNodeParameter('Id', itemIndex);
 		const endpoint = `/api/v1/orders/${id}/approve`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
-
 	} else if (operation === 'decline') {
 		// *********************************************************
 		//       order : decline
@@ -436,5 +387,4 @@ export async function executeOrderApi(this: IExecuteFunctions, itemIndex: number
 		const endpoint = `/api/v1/orders/${id}/decline`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
 	}
-
 }

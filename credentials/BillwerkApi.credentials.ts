@@ -1,8 +1,4 @@
-import {
-	ICredentialType,
-	INodeProperties,
-} from 'n8n-workflow';
-
+import { ICredentialType, INodeProperties } from 'n8n-workflow';
 
 export class BillwerkApi implements ICredentialType {
 	name = 'billwerkApi';
@@ -48,9 +44,7 @@ export class BillwerkApi implements ICredentialType {
 			placeholder: 'custom.billwerk.com',
 			displayOptions: {
 				show: {
-					environment: [
-						'dedicated',
-					],
+					environment: ['dedicated'],
 				},
 			},
 		},

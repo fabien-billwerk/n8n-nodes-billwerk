@@ -1,16 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const customerOperations: INodeProperties[] = [
 	{
@@ -51,9 +41,7 @@ export const customerOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
+				resource: ['customer'],
 			},
 		},
 	},
@@ -62,15 +50,12 @@ export const customerOperations: INodeProperties[] = [
 		name: 'search',
 		type: 'string',
 		default: '',
-		description: 'Search customers by External ID, First Name, Last Name, Company Name, Email Address and Debitor Account',
+		description:
+			'Search customers by External ID, First Name, Last Name, Company Name, Email Address and Debitor Account',
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['customer'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -100,12 +85,8 @@ export const customerOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['customer'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -117,16 +98,11 @@ export const customerOperations: INodeProperties[] = [
 		description: 'Search for a customer by External ID',
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['customer'],
+				operation: ['getAll'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'From',
@@ -136,12 +112,8 @@ export const customerOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first customer to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['customer'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -153,12 +125,8 @@ export const customerOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['customer'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -170,12 +138,8 @@ export const customerOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'get', 'delete', 'update',
-				],
+				resource: ['customer'],
+				operation: ['get', 'delete', 'update'],
 			},
 		},
 	},
@@ -194,21 +158,21 @@ export const customerDataOptions: INodeProperties[] = [
 		name: 'CompanyName',
 		type: 'string',
 		default: '',
-		description: 'Customer\'s company name',
+		description: "Customer's company name",
 	},
 	{
 		displayName: 'First Name',
 		name: 'FirstName',
 		type: 'string',
 		default: '',
-		description: 'Customer\'s first name',
+		description: "Customer's first name",
 	},
 	{
 		displayName: 'Last Name',
 		name: 'LastName',
 		type: 'string',
 		default: '',
-		description: 'Customer\'s last name',
+		description: "Customer's last name",
 	},
 	{
 		displayName: 'VAT ID',
@@ -222,14 +186,14 @@ export const customerDataOptions: INodeProperties[] = [
 		name: 'EmailAddress',
 		type: 'string',
 		default: '',
-		description: 'Customer\'s e-mail address',
+		description: "Customer's e-mail address",
 	},
 	{
 		displayName: 'Phone Number',
 		name: 'PhoneNumber',
 		type: 'string',
 		default: '',
-		description: 'Customer\'s phone number',
+		description: "Customer's phone number",
 	},
 	{
 		displayName: 'Notes',
@@ -288,7 +252,6 @@ export const customerDataOptions: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Country in ISO-3166 alpha-2 format',
-
 			},
 		],
 	},
@@ -334,15 +297,11 @@ export const customerDataFields: INodeProperties[] = [
 		placeholder: 'Add Field',
 		default: {},
 		required: true,
-		options: customerDataOptions ,
+		options: customerDataOptions,
 		displayOptions: {
 			show: {
-				resource: [
-					'customer',
-				],
-				operation: [
-					'update', 'create',
-				],
+				resource: ['customer'],
+				operation: ['update', 'create'],
 			},
 		},
 	},
@@ -376,8 +335,12 @@ export interface CustomField {
 	value: string;
 }
 
-
-export async function executeCustomerApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeCustomerApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'get') {
 		// *********************************************************
@@ -386,7 +349,6 @@ export async function executeCustomerApi(this: IExecuteFunctions, itemIndex: num
 		const id = this.getNodeParameter('Id', itemIndex);
 		const endpoint = `/api/v1/customers/${id}`;
 		return await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
-
 	} else if (operation === 'delete') {
 		// *********************************************************
 		//       customer : delete
@@ -395,7 +357,6 @@ export async function executeCustomerApi(this: IExecuteFunctions, itemIndex: num
 		const endpoint = `/api/v1/customers/${id}`;
 		await billwerkApiRequest.call(this, 'DELETE', endpoint, {}, {});
 		return { success: true };
-
 	} else if (operation === 'getAll') {
 		// *********************************************************
 		//       customer : getAll
@@ -408,7 +369,6 @@ export async function executeCustomerApi(this: IExecuteFunctions, itemIndex: num
 		qs.take = this.getNodeParameter('take', itemIndex);
 		const endpoint = '/api/v1/customers';
 		return await billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
 	} else if (operation === 'update') {
 		// *********************************************************
 		//       customer : update
@@ -417,20 +377,23 @@ export async function executeCustomerApi(this: IExecuteFunctions, itemIndex: num
 		const customFields = {} as IDataObject;
 		const customerData = this.getNodeParameter('customerData', itemIndex, {}) as IDataObject;
 		for (const key of Object.keys(customerData)) {
-			if (key === 'CustomFields' && (customerData.CustomFields as IDataObject).field !== undefined) {
-				for (const customField of (customerData.CustomFields as IDataObject)!.field! as CustomField[]) {
+			if (
+				key === 'CustomFields' &&
+				(customerData.CustomFields as IDataObject).field !== undefined
+			) {
+				for (const customField of (customerData.CustomFields as IDataObject)!
+					.field! as CustomField[]) {
 					customFields[customField.name] = customField.value;
 				}
 			} else {
 				body[key] = customerData[key];
 			}
 		}
-		if (Object.keys(customFields).length >0) {
+		if (Object.keys(customFields).length > 0) {
 			body['CustomFields'] = customFields;
 		}
 		const id = this.getNodeParameter('Id', itemIndex);
 		const endpoint = `/api/v1/customers/${id}`;
 		return await billwerkApiRequest.call(this, 'PATCH', endpoint, {}, body);
 	}
-
 }

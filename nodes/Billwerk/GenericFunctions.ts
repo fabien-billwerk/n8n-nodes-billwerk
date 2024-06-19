@@ -1,18 +1,13 @@
 import {
 	IExecuteFunctions,
-	IHookFunctions,
-	IWebhookFunctions,
-} from 'n8n-core';
-
-import {
 	IDataObject,
 	IHttpRequestMethods,
 	IHttpRequestOptions,
 	ILoadOptionsFunctions,
 	NodeApiError,
-
+	IHookFunctions,
+	IWebhookFunctions,
 } from 'n8n-workflow';
-
 
 /**
  * Make an authenticated API request to Billwerk.
@@ -23,23 +18,23 @@ export async function billwerkApiRequest(
 	endpoint: string,
 	qs: IDataObject,
 	body: IDataObject,
-): Promise<any> { // tslint:disable-line:no-any
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	const credentials = await this.getCredentials('billwerkApi');
 	const baseUrl = await getBaseUrl.call(this);
 	const nodeData = this.getWorkflowStaticData('node');
 
-	if(nodeData.token === undefined || nodeData.token === ""){
+	if (nodeData.token === undefined || nodeData.token === '') {
 		nodeData.token = await getAccessToken.call(this);
 	}
-
 
 	const options: IHttpRequestOptions = {
 		headers: {
 			'Content-Type': 'application/json',
 			'User-Agent': 'n8n-billwerk',
-			'Authorization': `Bearer ${nodeData.token}`,
-			'X-SELECTED-LEGAL-ENTITY-ID':	`${credentials.entityId}`,
+			Authorization: `Bearer ${nodeData.token}`,
+			'X-SELECTED-LEGAL-ENTITY-ID': `${credentials.entityId}`,
 		},
 		method,
 		qs,
@@ -68,7 +63,8 @@ export async function billwerkApiRequest(
  */
 export async function getAccessToken(
 	this: IExecuteFunctions | IWebhookFunctions | IHookFunctions,
-): Promise<any> { // tslint:disable-line:no-any
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	const credentials = await this.getCredentials('billwerkApi');
 
@@ -84,7 +80,7 @@ export async function getAccessToken(
 			password: credentials.clientSecret as string,
 		},
 		method: 'POST',
-		body: "grant_type=client_credentials",
+		body: 'grant_type=client_credentials',
 		url: `${baseUrl}/oauth/token`,
 		json: true,
 		returnFullResponse: true,
@@ -92,33 +88,32 @@ export async function getAccessToken(
 
 	try {
 		const response = await this.helpers.httpRequest!(options);
-		if(response && response.body && response.body.access_token){
+		if (response && response.body && response.body.access_token) {
 			return response.body.access_token;
 		}
 		throw new NodeApiError(this.getNode(), response);
-
 	} catch (error) {
 		throw new NodeApiError(this.getNode(), error);
 	}
 }
 
-
 /**
  * Return the base API URL based on the user's environment.
  */
-async function getBaseUrl(this: IExecuteFunctions | IWebhookFunctions | IHookFunctions | ILoadOptionsFunctions) {
+async function getBaseUrl(
+	this: IExecuteFunctions | IWebhookFunctions | IHookFunctions | ILoadOptionsFunctions,
+) {
 	const { environment, dedicatedDomain } = await this.getCredentials('billwerkApi');
 
-	switch(environment) {
-		case "sandbox": {
+	switch (environment) {
+		case 'sandbox': {
 			return 'https://sandbox.billwerk.com';
 		}
-		case "production": {
+		case 'production': {
 			return 'https://app.billwerk.com';
 		}
 		default: {
 			return `${dedicatedDomain}`;
 		}
 	}
-
 }

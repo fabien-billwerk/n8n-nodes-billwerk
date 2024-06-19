@@ -1,16 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const contractOperations: INodeProperties[] = [
 	{
@@ -52,9 +42,7 @@ export const contractOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
+				resource: ['contract'],
 			},
 		},
 	},
@@ -66,16 +54,11 @@ export const contractOperations: INodeProperties[] = [
 		description: 'Search for a contract by External ID',
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['contract'],
+				operation: ['getAll'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'From',
@@ -85,12 +68,8 @@ export const contractOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first contract to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['contract'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -102,12 +81,8 @@ export const contractOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['contract'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -119,12 +94,8 @@ export const contractOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
-				operation: [
-					'get', 'delete', 'annul', 'end',
-				],
+				resource: ['contract'],
+				operation: ['get', 'delete', 'annul', 'end'],
 			},
 		},
 	},
@@ -137,27 +108,24 @@ export const contractOperations: INodeProperties[] = [
 		description: 'Date when contract should be cancelled',
 		displayOptions: {
 			show: {
-				resource: [
-					'contract',
-				],
-				operation: [
-					'end',
-				],
+				resource: ['contract'],
+				operation: ['end'],
 			},
 		},
 	},
 ];
-
-
-
 
 export interface CustomField {
 	name: string;
 	value: string;
 }
 
-
-export async function executeContractApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeContractApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'get') {
 		// *********************************************************
@@ -166,7 +134,6 @@ export async function executeContractApi(this: IExecuteFunctions, itemIndex: num
 		const id = this.getNodeParameter('Id', itemIndex);
 		const endpoint = `/api/v1/contracts/${id}`;
 		return await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
-
 	} else if (operation === 'delete') {
 		// *********************************************************
 		//       contract : delete
@@ -175,7 +142,6 @@ export async function executeContractApi(this: IExecuteFunctions, itemIndex: num
 		const endpoint = `/api/v1/contracts/${id}`;
 		await billwerkApiRequest.call(this, 'DELETE', endpoint, {}, {});
 		return { success: true };
-
 	} else if (operation === 'getAll') {
 		// *********************************************************
 		//       contract : getAll
@@ -186,8 +152,7 @@ export async function executeContractApi(this: IExecuteFunctions, itemIndex: num
 		qs.take = this.getNodeParameter('take', itemIndex);
 		const endpoint = '/api/v1/contracts';
 		return await billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
-	}	else if (operation === 'end') {
+	} else if (operation === 'end') {
 		// *********************************************************
 		//       contract : end
 		// *********************************************************
@@ -198,7 +163,6 @@ export async function executeContractApi(this: IExecuteFunctions, itemIndex: num
 		const endpoint = `/api/v1/contracts/${id}/end`;
 		await billwerkApiRequest.call(this, 'POST', endpoint, {}, body);
 		return { success: true };
-
 	} else if (operation === 'annul') {
 		// *********************************************************
 		//       contract : annul
@@ -208,6 +172,5 @@ export async function executeContractApi(this: IExecuteFunctions, itemIndex: num
 		const endpoint = `/api/v1/contracts/${id}/annulate`;
 		await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
 		return { success: true };
-
 	}
 }

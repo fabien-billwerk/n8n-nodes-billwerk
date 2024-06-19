@@ -1,15 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 
-import {
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const accountingExportOperations: INodeProperties[] = [
 	{
@@ -25,13 +16,10 @@ export const accountingExportOperations: INodeProperties[] = [
 				description: 'Creates a file download token for the given accounting export',
 				action: 'Get download link an accounting export',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'accountingExport',
-				],
+				resource: ['accountingExport'],
 			},
 		},
 	},
@@ -42,18 +30,19 @@ export const accountingExportOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'accountingExport',
-				],
-				operation: [
-					'downloadLink',
-				],
+				resource: ['accountingExport'],
+				operation: ['downloadLink'],
 			},
 		},
 	},
 ];
 
-export async function executeAccountingExportApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeAccountingExportApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'downloadLink') {
 		// *********************************************************
@@ -63,5 +52,4 @@ export async function executeAccountingExportApi(this: IExecuteFunctions, itemIn
 		const endpoint = `/api/v1/accountingExportFiles/${id}/downloadLink`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
 	}
-
 }

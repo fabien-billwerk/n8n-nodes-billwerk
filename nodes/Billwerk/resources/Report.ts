@@ -1,15 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 
-import {
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const reportOperations: INodeProperties[] = [
 	{
@@ -25,13 +16,10 @@ export const reportOperations: INodeProperties[] = [
 				description: 'Creates a file download token for the given report',
 				action: 'Get download link a report',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'report',
-				],
+				resource: ['report'],
 			},
 		},
 	},
@@ -42,18 +30,19 @@ export const reportOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'report',
-				],
-				operation: [
-					'downloadLink',
-				],
+				resource: ['report'],
+				operation: ['downloadLink'],
 			},
 		},
 	},
 ];
 
-export async function executeReportApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeReportApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'downloadLink') {
 		// *********************************************************
@@ -63,5 +52,4 @@ export async function executeReportApi(this: IExecuteFunctions, itemIndex: numbe
 		const endpoint = `/api/v1/reports/${id}/downloadLink`;
 		return await billwerkApiRequest.call(this, 'POST', endpoint, {}, {});
 	}
-
 }

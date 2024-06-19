@@ -1,16 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, IDataObject, INodeProperties } from 'n8n-workflow';
 
-import {
-	IDataObject,
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	billwerkApiRequest,
-} from '../GenericFunctions';
-
+import { billwerkApiRequest } from '../GenericFunctions';
 
 export const paymentOperations: INodeProperties[] = [
 	{
@@ -35,16 +25,14 @@ export const paymentOperations: INodeProperties[] = [
 			{
 				name: 'Create',
 				value: 'create',
-				description: 'Register a payment/refund/chargeback received outside billwerk (bank transfer, cash...)',
+				description:
+					'Register a payment/refund/chargeback received outside billwerk (bank transfer, cash...)',
 				action: 'Create a payment',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
+				resource: ['payment'],
 			},
 		},
 	},
@@ -55,12 +43,8 @@ export const paymentOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'get',
-				],
+				resource: ['payment'],
+				operation: ['get'],
 			},
 		},
 	},
@@ -72,12 +56,8 @@ export const paymentOperations: INodeProperties[] = [
 		description: 'Pagination: ID of first payment to return',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -89,12 +69,8 @@ export const paymentOperations: INodeProperties[] = [
 		description: 'Pagination: Limit returned items (500 max.)',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -103,20 +79,15 @@ export const paymentOperations: INodeProperties[] = [
 		name: 'search',
 		type: 'string',
 		default: '',
-		description: 'Search payments by Transaction ID, Provider Transaction ID, Customer Name or Contract ID',
+		description:
+			'Search payments by Transaction ID, Provider Transaction ID, Customer Name or Contract ID',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
-
-
 
 	{
 		displayName: 'Status',
@@ -220,12 +191,8 @@ export const paymentOperations: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -235,15 +202,12 @@ export const paymentOperations: INodeProperties[] = [
 		name: 'dateFrom',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches payment transactions with creation date equal or younger specified timestamp, optional',
+		description:
+			'Searches payment transactions with creation date equal or younger specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
@@ -252,19 +216,15 @@ export const paymentOperations: INodeProperties[] = [
 		name: 'dateTo',
 		type: 'dateTime',
 		default: '',
-		description: 'Searches payment transactions with creation date equal or older than specified timestamp, optional',
+		description:
+			'Searches payment transactions with creation date equal or older than specified timestamp, optional',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'getAll',
-				],
+				resource: ['payment'],
+				operation: ['getAll'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'Contract ID',
@@ -273,16 +233,11 @@ export const paymentOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['payment'],
+				operation: ['create'],
 			},
 		},
 	},
-
 
 	{
 		displayName: 'Amount',
@@ -293,12 +248,8 @@ export const paymentOperations: INodeProperties[] = [
 		description: 'Amount received (positive amount) or refund/chargeback amount (negative amount)',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['payment'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -311,12 +262,8 @@ export const paymentOperations: INodeProperties[] = [
 		description: 'Currency in ISO format (EUR, CHF, GBP...)',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['payment'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -328,12 +275,8 @@ export const paymentOperations: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['payment'],
+				operation: ['create'],
 			},
 		},
 	},
@@ -361,20 +304,19 @@ export const paymentOperations: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'payment',
-				],
-				operation: [
-					'create',
-				],
+				resource: ['payment'],
+				operation: ['create'],
 			},
 		},
 	},
 ];
 
-
-
-export async function executePaymentApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executePaymentApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	if (operation === 'get') {
 		// *********************************************************
@@ -383,7 +325,6 @@ export async function executePaymentApi(this: IExecuteFunctions, itemIndex: numb
 		const id = this.getNodeParameter('id', itemIndex);
 		const endpoint = `/api/v1/paymentTransactions/${id}`;
 		return await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
-
 	} else if (operation === 'getAll') {
 		// *********************************************************
 		//       payment : getAll
@@ -397,7 +338,6 @@ export async function executePaymentApi(this: IExecuteFunctions, itemIndex: numb
 		qs.dateTo = this.getNodeParameter('dateTo', itemIndex);
 		const endpoint = '/api/v1/paymentTransactions';
 		return await billwerkApiRequest.call(this, 'GET', endpoint, qs, {});
-
 	} else if (operation === 'create') {
 		// *********************************************************
 		//       payment : create
@@ -408,7 +348,7 @@ export async function executePaymentApi(this: IExecuteFunctions, itemIndex: numb
 		body.description = this.getNodeParameter('paymentDescription', itemIndex);
 		//body.recurringPaymentsOff = false; //this.getNodeParameter('recurringPaymentsOff', itemIndex) || null;
 		const bookingDateString = this.getNodeParameter('paymentBookingDate', itemIndex) as string;
-		body.bookingDate = bookingDateString.substring(0,10); //we need only the date, not dateTime
+		body.bookingDate = bookingDateString.substring(0, 10); //we need only the date, not dateTime
 		const contractId = this.getNodeParameter('contractId', itemIndex);
 		const endpoint = `/api/v1/contracts/${contractId}/payment`;
 		await billwerkApiRequest.call(this, 'POST', endpoint, {}, body);

@@ -1,15 +1,6 @@
-import {
-	IExecuteFunctions,
-} from 'n8n-core';
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 
-import {
-	INodeProperties,
-} from 'n8n-workflow';
-
-import {
-	getAccessToken,
-} from '../GenericFunctions';
-
+import { getAccessToken } from '../GenericFunctions';
 
 export const tokenOperations: INodeProperties[] = [
 	{
@@ -22,29 +13,31 @@ export const tokenOperations: INodeProperties[] = [
 			{
 				name: 'Get Access Token',
 				value: 'getAccessToken',
-				description: 'Returns only the authentication token, to be used with standard HTTP requests',
+				description:
+					'Returns only the authentication token, to be used with standard HTTP requests',
 				action: 'Get the access token',
 			},
-
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'token',
-				],
+				resource: ['token'],
 			},
 		},
 	},
 ];
 
-export async function executeTokenApi(this: IExecuteFunctions, itemIndex: number, operation: string,): Promise<any> { // tslint:disable-line:no-any
+export async function executeTokenApi(
+	this: IExecuteFunctions,
+	itemIndex: number,
+	operation: string,
+): Promise<any> {
+	// tslint:disable-line:no-any
 
 	const nodeData = this.getWorkflowStaticData('node');
 
-	if(nodeData.token === undefined || nodeData.token === ""){
+	if (nodeData.token === undefined || nodeData.token === '') {
 		nodeData.token = await getAccessToken.call(this);
 	}
 
-	return {access_token: nodeData.token};
-
+	return { access_token: nodeData.token };
 }

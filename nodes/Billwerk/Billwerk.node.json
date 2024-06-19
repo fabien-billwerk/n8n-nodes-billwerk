@@ -2,7 +2,5 @@
 	"node": "n8n-nodes-billwerk.billwerk",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
-	"categories": [
-		"Finance & Accounting"
-	]
+	"categories": ["Finance & Accounting"]
 }

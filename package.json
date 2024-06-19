@@ -1,14 +1,14 @@
 {
   "name": "n8n-nodes-billwerk",
   "version": "1.1.0",
-  "description": "Automate your subscription business with billwerk",
+  "description": "Automate your subscription business with Billwerk+ Transform",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "Billwerk",
+    "name": "Billwerk+ Transform",
     "email": "support@billwerk.com"
   },
   "repository": {
@@ -42,10 +42,12 @@
     "@types/request-promise-native": "~1.0.15",
     "@typescript-eslint/parser": "~5.45",
     "eslint-plugin-n8n-nodes-base": "^1.11.0",
-    "gulp": "^4.0.2",
-    "n8n-core": "^0.170.0",
-    "n8n-workflow": "^0.151.0",
+    "gulp": "^5.0.0",
+    "n8n-workflow": "^1.36.1",
     "prettier": "^2.7.1",
     "typescript": "~4.8.4"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
   }
 }

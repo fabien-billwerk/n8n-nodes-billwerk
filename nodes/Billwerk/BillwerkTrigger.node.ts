@@ -1,13 +1,10 @@
 import {
-	IHookFunctions,
-	IWebhookFunctions,
-} from 'n8n-core';
-
-import {
 	IDataObject,
 	INodeType,
 	INodeTypeDescription,
 	IWebhookResponseData,
+	IHookFunctions,
+	IWebhookFunctions,
 } from 'n8n-workflow';
 
 import {
@@ -18,15 +15,15 @@ import {
 
 export class BillwerkTrigger implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Billwerk Trigger',
+		displayName: 'Billwerk+ Transform Trigger',
 		name: 'billwerkTrigger',
-		icon: 'file:billwerk.svg',
+		icon: 'file:Billwerk+Transform.svg',
 		group: ['trigger'],
 		version: 1,
-		subtitle: 'Webhooks from billwerk',
-		description: 'Receive updates about your subscription business with billwerk',
+		subtitle: 'Webhooks from Billwerk+ Transfrom',
+		description: 'Receive updates about your subscription business with Billwerk+ Transfrom',
 		defaults: {
-			name: 'Billwerk Trigger',
+			name: 'Billwerk+ Transfrom Trigger',
 		},
 		inputs: [],
 		outputs: ['main'],
@@ -140,7 +137,8 @@ export class BillwerkTrigger implements INodeType {
 					{
 						name: 'Insufficient Balance For Next Billing',
 						value: 'InsufficientBalanceForNextBilling',
-						description: 'When the current billing is done, but for the next billing there is insufficient credit',
+						description:
+							'When the current billing is done, but for the next billing there is insufficient credit',
 					},
 					{
 						name: 'Invoice Corrected',
@@ -165,7 +163,8 @@ export class BillwerkTrigger implements INodeType {
 					{
 						name: 'Payment Bearer Expiring',
 						value: 'PaymentBearerExpiring',
-						description: 'When a payment bearer (for example credit card) is valid only for one more month',
+						description:
+							'When a payment bearer (for example credit card) is valid only for one more month',
 					},
 					{
 						name: 'Payment Data Changed',
@@ -180,7 +179,8 @@ export class BillwerkTrigger implements INodeType {
 					{
 						name: 'Payment Escalation Reset',
 						value: 'PaymentEscalationReset',
-						description: 'When the escalation process is reset for a specific contract (for example due to payment)',
+						description:
+							'When the escalation process is reset for a specific contract (for example due to payment)',
 					},
 					{
 						name: 'Payment Failed',
@@ -240,7 +240,8 @@ export class BillwerkTrigger implements INodeType {
 					{
 						name: 'Recurring Billing Approaching',
 						value: 'RecurringBillingApproaching',
-						description: 'When a contract passed its next billing period and billing delay period started to pass metered usage',
+						description:
+							'When a contract passed its next billing period and billing delay period started to pass metered usage',
 					},
 					{
 						name: 'Report Failed',
@@ -255,13 +256,13 @@ export class BillwerkTrigger implements INodeType {
 					{
 						name: 'Trial End Approaching',
 						value: 'TrialEndApproaching',
-						description: 'When the trial phase of a contract is about to end (period can be configured in each plan)',
+						description:
+							'When the trial phase of a contract is about to end (period can be configured in each plan)',
 					},
 				],
 			},
 		],
 	};
-
 
 	// @ts-ignore
 	webhookMethods = {
@@ -272,7 +273,7 @@ export class BillwerkTrigger implements INodeType {
 
 				const endpoint = `/api/v1/webhooks/`;
 
-				const billwerkWebhooks = await billwerkApiRequest.call(this, 'GET',  endpoint, {}, {});
+				const billwerkWebhooks = await billwerkApiRequest.call(this, 'GET', endpoint, {}, {});
 
 				for (const billwerkWebhook of billwerkWebhooks) {
 					if (billwerkWebhook.Url === webhookUrl /*&& webhook.event === snakeCase(event)*/) {
@@ -290,24 +291,22 @@ export class BillwerkTrigger implements INodeType {
 
 				const endpoint = `/api/v1/webhooks/`;
 
-
 				const body: IDataObject = {
 					events: events as string[],
 					url: webhookUrl,
 				};
 
-				const webhook = await billwerkApiRequest.call(this, 'POST',  endpoint, {}, body);
+				const webhook = await billwerkApiRequest.call(this, 'POST', endpoint, {}, body);
 				webhookData.webhookId = webhook.Id;
 				return true;
 			},
 
 			async delete(this: IHookFunctions): Promise<boolean> {
-
 				const webhookData = this.getWorkflowStaticData('node');
 				try {
 					const endpoint = `/api/v1/webhooks/${webhookData.webhookId}`;
 
-					await billwerkApiRequest.call(this, 'DELETE',  endpoint, {}, {});
+					await billwerkApiRequest.call(this, 'DELETE', endpoint, {}, {});
 				} catch (error) {
 					return false;
 				}
@@ -318,9 +317,6 @@ export class BillwerkTrigger implements INodeType {
 		},
 	};
 
-
-
-
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const req = this.getRequestObject();
 		const bodyData = this.getBodyData() as IDataObject;
@@ -329,16 +325,15 @@ export class BillwerkTrigger implements INodeType {
 
 		const activatedEvents = this.getNodeParameter('events', []) as string[];
 
-		if (eventType === undefined || !activatedEvents.includes('all') && !activatedEvents.includes(eventType)) {
+		if (
+			eventType === undefined ||
+			(!activatedEvents.includes('all') && !activatedEvents.includes(eventType))
+		) {
 			return {};
 		}
 
 		return {
-			workflowData: [
-					this.helpers.returnJsonArray(req.body),
-			],
+			workflowData: [this.helpers.returnJsonArray(req.body)],
 		};
 	}
-
-
 }
