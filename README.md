@@ -2,7 +2,7 @@
 
 
 
-With the billwerk n8n integration, you can automate more business processes, integrate with more systems, and unleash the potential of your subscription business.
+With the Billwerk+ Transform n8n integration, you can automate more business processes, integrate with more systems, and unleash the potential of your subscription business.
 
 
 
@@ -35,7 +35,7 @@ For Docker-based deployments, add the following line before the font installatio
 
 ## How to use
 
-To use the billwerk n8n node, you need to have already a working billwerk account.
+To use the Billwerk+ Transform n8n node, you need to have already a working Billwerk+ Transform account.
 
 If you want to evaluate our product, or if you want to test the integration without affecting your real users, you can register on our sandbox environment.
 
@@ -47,7 +47,7 @@ Make sure to select Client Type: Confidential, as public clients are not support
 
 ### Actions
 
-The Billwerk node supports the most commons operations of the billwerk API.
+The Billwerk+ Transform node supports the most commons operations of the Billwerk+ Transform API.
 The following resources and operations are supported:
 * Accounting exports [download]
 * Customers [get, get all, create, update, delete]
@@ -62,7 +62,7 @@ The following resources and operations are supported:
 Note: download actions provide URL only and file can be downloaded with additional HTTP Request node.
 
 ### Webhooks / Triggers
-This package also include a BillwerkTrigger node, which can be used to start workflows from any of the webhooks that billwerk supports. It can be used to notify you about every new customer signing up, missed payment deadlines, and much more.
+This package also include a BillwerkTrigger node, which can be used to start workflows from any of the webhooks that Billwerk+ Transform supports. It can be used to notify you about every new customer signing up, missed payment deadlines, and much more.
 
 The webhooks are configured automatically by n8n when starting the workflow, so you don't need to do the configuration yourself.
 
